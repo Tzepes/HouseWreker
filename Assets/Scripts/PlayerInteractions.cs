@@ -13,13 +13,15 @@ public class PlayerInteractions : NetworkBehaviour
     private Rigidbody RBprop;
     private Transform prop;
 
-    private void OnStartAuthority()
+    public override void OnStartAuthority()
     {
         interactableArea.SetActive(true);
     }
 
     public void Update()
     {
+        if (prop == null) { return; }
+
         if(Input.GetKeyDown(KeyCode.E) && propInTrigger){
             hasProp = !hasProp;
         }
@@ -27,6 +29,7 @@ public class PlayerInteractions : NetworkBehaviour
         if (hasProp)
         {
             prop.transform.SetParent(this.transform);
+            prop.GetComponent<PropOutline>().disableOutline();
             RBprop.useGravity = false;
         }else if (!hasProp)
         {
@@ -39,11 +42,10 @@ public class PlayerInteractions : NetworkBehaviour
     {
         if (other.tag == "Prop")
         {
-            Debug.Log("Prop in trigger");
-            //fa contur auriu
             propInTrigger = true;
             prop = other.transform;
             RBprop = other.gameObject.GetComponent<Rigidbody>();
+            other.GetComponent<PropOutline>().enableOutline();
         }
 
         if (other == null)
@@ -51,6 +53,14 @@ public class PlayerInteractions : NetworkBehaviour
             propInTrigger = false;
             prop = null;
             RBprop = null;
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Prop")
+        {
+            other.GetComponent<PropOutline>().disableOutline();
         }
     }
 }

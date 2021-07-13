@@ -8,7 +8,7 @@ public class HWPlayer : NetworkBehaviour
     [SerializeField]
     private GameObject interactableArea;
 
-    private void OnStartAuthority()
+    public override void OnStartAuthority()
     {
         interactableArea.SetActive(true);
     }
