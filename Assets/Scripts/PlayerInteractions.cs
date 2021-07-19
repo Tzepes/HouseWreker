@@ -22,19 +22,18 @@ public class PlayerInteractions : NetworkBehaviour
     {
         if (prop == null) { return; }
 
-        if(Input.GetKeyDown(KeyCode.E) && propInTrigger){
-            hasProp = !hasProp;
-        }
+        if (Input.GetKeyDown(KeyCode.E) && propInTrigger)
+        {
+            CmdPickUp();
 
-        if (hasProp)
-        {
-            prop.transform.SetParent(this.transform);
-            prop.GetComponent<PropOutline>().disableOutline();
-            RBprop.useGravity = false;
-        }else if (!hasProp)
-        {
-            prop.transform.parent = null;
-            RBprop.useGravity = true;
+            if (hasProp)
+            {
+                pickUp();
+            }
+            else if (!hasProp)
+            {
+                Drop();
+            }
         }
     }
 
@@ -47,13 +46,6 @@ public class PlayerInteractions : NetworkBehaviour
             RBprop = other.gameObject.GetComponent<Rigidbody>();
             other.GetComponent<PropOutline>().enableOutline();
         }
-
-        if (other == null)
-        {
-            propInTrigger = false;
-            prop = null;
-            RBprop = null;
-        }
     }
 
     public void OnTriggerExit(Collider other)
@@ -61,6 +53,29 @@ public class PlayerInteractions : NetworkBehaviour
         if(other.tag == "Prop")
         {
             other.GetComponent<PropOutline>().disableOutline();
+            propInTrigger = false;
+            prop = null;
+            RBprop = null;
         }
+    }
+
+    public void CmdPickUp()
+    {
+        hasProp = !hasProp;        
+    }
+
+    //[ClientRpc]
+    public void pickUp()
+    {
+        prop.transform.SetParent(this.transform);
+        prop.GetComponent<PropOutline>().disableOutline();
+        RBprop.useGravity = false;
+    }
+
+    //[ClientRpc]
+    public void Drop()
+    {
+        prop.transform.parent = null;
+        RBprop.useGravity = true;
     }
 }

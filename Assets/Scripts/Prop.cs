@@ -15,7 +15,7 @@ public class Prop : NetworkBehaviour
     {
         if (!IsGrounded)
         {
-            if(rb.velocity.y < -6f) // TODO get last max velocity and check if it was big enough
+            if(rb.velocity.y < -6f) 
             {
                 maxVel = true;
             }
