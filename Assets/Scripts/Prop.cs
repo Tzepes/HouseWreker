@@ -15,7 +15,7 @@ public class Prop : NetworkBehaviour
     {
         if (!IsGrounded)
         {
-            if(rb.velocity.y < -6f) 
+            if (rb.velocity.y < -6f)
             {
                 maxVel = true;
             }

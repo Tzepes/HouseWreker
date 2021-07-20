@@ -13,27 +13,38 @@ public class PlayerInteractions : NetworkBehaviour
     private Rigidbody RBprop;
     private Transform prop;
 
+    private Camera mainCamera;
+
     public override void OnStartAuthority()
     {
-        interactableArea.SetActive(true);
+        //mainCamera = Camera.main;
     }
 
     public void Update()
     {
         if (prop == null) { return; }
 
-        if (Input.GetKeyDown(KeyCode.E) && propInTrigger)
+        if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {
-            CmdPickUp();
+            CmdInteract();
+        }
 
-            if (hasProp)
-            {
-                pickUp();
-            }
-            else if (!hasProp)
-            {
-                Drop();
-            }
+        if (hasProp)
+        {
+            pickUp();
+        }
+        else if (!hasProp)
+        {
+            Drop();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(prop != null && hasProp)
+        {
+            Vector3 direction = interactableArea.transform.position - RBprop.position;
+            RBprop.velocity = direction.normalized;
         }
     }
 
@@ -50,7 +61,7 @@ public class PlayerInteractions : NetworkBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if(other.tag == "Prop")
+        if (other.tag == "Prop")
         {
             other.GetComponent<PropOutline>().disableOutline();
             propInTrigger = false;
@@ -59,23 +70,25 @@ public class PlayerInteractions : NetworkBehaviour
         }
     }
 
-    public void CmdPickUp()
+    public void CmdInteract()
     {
-        hasProp = !hasProp;        
+        hasProp = !hasProp;
     }
 
     //[ClientRpc]
     public void pickUp()
     {
-        prop.transform.SetParent(this.transform);
+        prop.SetParent(this.transform);
         prop.GetComponent<PropOutline>().disableOutline();
+        RBprop.constraints = RigidbodyConstraints.FreezeRotation;
         RBprop.useGravity = false;
     }
 
     //[ClientRpc]
     public void Drop()
     {
-        prop.transform.parent = null;
+        prop.parent = null;
+        RBprop.constraints = RigidbodyConstraints.None;
         RBprop.useGravity = true;
     }
 }
