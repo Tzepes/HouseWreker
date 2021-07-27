@@ -12,9 +12,6 @@ public class PlayerInteractions : NetworkBehaviour
     private bool hasProp = false;
     private GameObject sceneObjectPrefab;
 
-    [SyncVar(hook = nameof(OnChangeEquipment))]
-    public EquippedItem equippedItem;
-
     public void GetPropInTrigger(bool inTrigger)
     {
         propInTrigger = inTrigger;
@@ -52,9 +49,9 @@ public class PlayerInteractions : NetworkBehaviour
     [Command]
     public void pickUp()
     {
-        NetworkServer.Destroy(prop);
-        //prop.SetParent(this.transform);
-        prop.GetComponent<PropOutline>().disableOutline();
+        NetworkServer.Destroy(sceneObjectPrefab);
+        Instantiate(sceneObjectPrefab, interactableArea.transform);
+        sceneObjectPrefab.GetComponent<PropOutline>().disableOutline();
     }
 
     [Command]
