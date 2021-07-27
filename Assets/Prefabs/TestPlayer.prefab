@@ -914,6 +914,7 @@ GameObject:
   - component: {fileID: 7611453152706050653}
   - component: {fileID: 8462746344579857579}
   - component: {fileID: 2083558068585603589}
+  - component: {fileID: 1730621604452583638}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -1105,6 +1106,21 @@ MonoBehaviour:
   syncInterval: 0.1
   movementSpeed: 5
   controller: {fileID: 6827840251378206988}
+--- !u!114 &1730621604452583638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2994760246694607246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682dad3096689024c9f8e766f6704bc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  interactableArea: {fileID: 3589919168068524502}
 --- !u!1 &3589919168068524502
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,7 +1133,7 @@ GameObject:
   - component: {fileID: 6846880998768339554}
   - component: {fileID: 982340369936387413}
   - component: {fileID: 3059326600703011887}
-  - component: {fileID: 2000507911599093638}
+  - component: {fileID: 5224917750127484342}
   m_Layer: 0
   m_Name: Interaction_Cast
   m_TagString: Untagged
@@ -1178,7 +1194,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &2000507911599093638
+--- !u!114 &5224917750127484342
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1187,11 +1203,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3589919168068524502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 682dad3096689024c9f8e766f6704bc2, type: 3}
+  m_Script: {fileID: 11500000, guid: b612e103bae9ffa40b29225c6b11b75c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  sphereCastRadius: 0.5
-  interactableArea: {fileID: 3589919168068524502}
-  raycastPos: {x: 0, y: 0, z: 0.467}
+  player: {fileID: 2994760246694607246}

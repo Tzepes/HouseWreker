@@ -10,23 +10,28 @@ public class PlayerInteractions : NetworkBehaviour
 
     private bool propInTrigger = false;
     private bool hasProp = false;
-    private Rigidbody RBprop;
-    private Transform prop;
+    private GameObject sceneObjectPrefab;
 
-    private Camera mainCamera;
+    [SyncVar(hook = nameof(OnChangeEquipment))]
+    public EquippedItem equippedItem;
 
-    public override void OnStartAuthority()
+    public void GetPropInTrigger(bool inTrigger)
     {
-        //mainCamera = Camera.main;
+        propInTrigger = inTrigger;
+    }
+
+    public void GetProp(GameObject _prop)
+    {
+        sceneObjectPrefab = _prop;
     }
 
     public void Update()
     {
-        if (prop == null) { return; }
+        if (sceneObjectPrefab == null) { return; }
 
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {
-            CmdInteract();
+            Interact();
         }
 
         if (hasProp)
@@ -39,56 +44,22 @@ public class PlayerInteractions : NetworkBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        if(prop != null && hasProp)
-        {
-            Vector3 direction = interactableArea.transform.position - RBprop.position;
-            RBprop.velocity = direction.normalized;
-        }
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Prop")
-        {
-            propInTrigger = true;
-            prop = other.transform;
-            RBprop = other.gameObject.GetComponent<Rigidbody>();
-            other.GetComponent<PropOutline>().enableOutline();
-        }
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Prop")
-        {
-            other.GetComponent<PropOutline>().disableOutline();
-            propInTrigger = false;
-            prop = null;
-            RBprop = null;
-        }
-    }
-
-    public void CmdInteract()
+    public void Interact()
     {
         hasProp = !hasProp;
     }
 
-    //[ClientRpc]
+    [Command]
     public void pickUp()
     {
-        prop.SetParent(this.transform);
+        NetworkServer.Destroy(prop);
+        //prop.SetParent(this.transform);
         prop.GetComponent<PropOutline>().disableOutline();
-        RBprop.constraints = RigidbodyConstraints.FreezeRotation;
-        RBprop.useGravity = false;
     }
 
-    //[ClientRpc]
+    [Command]
     public void Drop()
     {
-        prop.parent = null;
-        RBprop.constraints = RigidbodyConstraints.None;
-        RBprop.useGravity = true;
+        sceneObjectPrefab = null;
     }
 }
