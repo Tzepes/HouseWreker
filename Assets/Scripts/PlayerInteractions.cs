@@ -22,6 +22,8 @@ public class PlayerInteractions : NetworkBehaviour
 
     public void Update()
     {
+        // ADD CHECK FOR PLAYER AUTHORITY / IS LOCAL PLAYER
+    
         if (prop == null) { return; }
 
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
