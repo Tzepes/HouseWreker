@@ -7,13 +7,15 @@ public class InteractableArea : MonoBehaviour
     [SerializeField]
     private GameObject player;
 
+    //PlayerInteractions playerComponent = player.GetComponent<PlayerInteractions>();
+
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Prop")
         {
-            player.GetComponent<PlayerInteractions>().GetPropInTrigger(true);
-            player.GetComponent<PlayerInteractions>().GetProp(other.transform.gameObject);
             other.GetComponent<PropOutline>().enableOutline();
+            player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
+            player.GetComponent<PlayerInteractions>().GetProp(other.gameObject);
         }
     }
 
@@ -22,8 +24,6 @@ public class InteractableArea : MonoBehaviour
         if (other.tag == "Prop")
         {
             other.GetComponent<PropOutline>().disableOutline();
-            player.GetComponent<PlayerInteractions>().GetPropInTrigger(false);
-            player.GetComponent<PlayerInteractions>().GetProp(null);
         }
     }
 }

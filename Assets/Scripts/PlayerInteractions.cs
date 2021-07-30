@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
+public enum EquippedProp : byte
+{
+    nothing,
+    prop
+}
+
 public class PlayerInteractions : NetworkBehaviour
 {
     [SerializeField]
@@ -10,53 +16,83 @@ public class PlayerInteractions : NetworkBehaviour
 
     private bool propInTrigger = false;
     private bool hasProp = false;
-    private GameObject sceneObjectPrefab;
 
-    public void GetPropInTrigger(bool inTrigger)
+    [SerializeField]
+    private GameObject sceneProp;
+
+    [SyncVar(hook = nameof(OnChangePickup))]
+    public EquippedProp equippedProp;
+
+    public void GetTriggerStatus(bool inTrigger)
     {
-        propInTrigger = inTrigger;
+        hasProp = inTrigger;
     }
 
     public void GetProp(GameObject _prop)
     {
-        sceneObjectPrefab = _prop;
+        sceneProp = _prop;
+    }
+
+    void OnChangePickup(EquippedProp oldEquippedProp,  EquippedProp newEquippedProp)
+    {
+        StartCoroutine(ChangeEquipedProp(newEquippedProp));
+    }
+
+    IEnumerator ChangeEquipedProp(EquippedProp newEquippedProp)
+    {
+        while (interactableArea.transform.childCount > 0)
+        {
+            Destroy(interactableArea.transform.GetChild(0).gameObject);
+            yield return null;
+        }
+
+        switch (newEquippedProp)
+        {
+            case EquippedProp.prop:                
+                Instantiate(sceneProp, interactableArea.transform);
+                break;
+        }
     }
 
     public void Update()
     {
-        if (sceneObjectPrefab == null) { return; }
+        if(!hasAuthority) { return; }
+
+        if (sceneProp == null) { return; }
 
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {
             Interact();
         }
-
-        if (hasProp)
-        {
-            pickUp();
-        }
-        else if (!hasProp)
-        {
-            Drop();
-        }
     }
 
     public void Interact()
     {
+        if (hasProp)
+        {
+            CmdPickup(EquippedProp.prop);
+        }
+        else if (!hasProp)
+        {
+            CmdDrop(EquippedProp.nothing);
+        }
+
         hasProp = !hasProp;
     }
 
     [Command]
-    public void pickUp()
+    public void CmdPickup(EquippedProp chosenProp)
     {
-        NetworkServer.Destroy(sceneObjectPrefab);
-        Instantiate(sceneObjectPrefab, interactableArea.transform);
-        sceneObjectPrefab.GetComponent<PropOutline>().disableOutline();
+        equippedProp = chosenProp;
+        //prop.transform.SetParent(interactableArea.transform);
+        sceneProp.GetComponent<PropOutline>().disableOutline();
+        //sceneProp.GetComponent<Prop>().CreatePickUpModel(interactableArea.transform);  ---> it s place might be taken by Instantiate() inside ChangeEquipedProp
+        sceneProp.GetComponent<Prop>().PickingUp();
     }
 
     [Command]
-    public void Drop()
+    public void CmdDrop(EquippedProp drop)
     {
-        sceneObjectPrefab = null;
+        equippedProp = drop;
     }
 }

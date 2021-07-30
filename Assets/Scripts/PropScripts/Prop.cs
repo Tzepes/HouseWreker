@@ -7,6 +7,8 @@ public class Prop : NetworkBehaviour
 {
     [SerializeField]
     private Rigidbody rb;
+    [SerializeField]
+    private GameObject propModel;
     private bool IsGrounded;
     private bool maxVel;
 
@@ -20,12 +22,12 @@ public class Prop : NetworkBehaviour
                 maxVel = true;
             }
         }
+
         if (IsGrounded && maxVel)
         {
             Destroy(gameObject);
         }
     }
-
 
     void OnCollisionStay(Collision collisionInfo)
     {
@@ -35,5 +37,10 @@ public class Prop : NetworkBehaviour
     void OnCollisionExit(Collision collisionInfo)
     {
         IsGrounded = false;
+    }
+
+    public void PickingUp()
+    {
+        Destroy(this.gameObject);
     }
 }
