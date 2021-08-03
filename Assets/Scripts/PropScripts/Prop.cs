@@ -43,4 +43,9 @@ public class Prop : NetworkBehaviour
     {
         Destroy(this.gameObject);
     }
+
+    public GameObject PropModel()
+    {
+        return propModel;
+    }
 }

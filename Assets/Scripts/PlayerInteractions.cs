@@ -25,7 +25,7 @@ public class PlayerInteractions : NetworkBehaviour
 
     public void GetTriggerStatus(bool inTrigger)
     {
-        hasProp = inTrigger;
+        propInTrigger = inTrigger;
     }
 
     public void GetProp(GameObject _prop)
@@ -35,21 +35,17 @@ public class PlayerInteractions : NetworkBehaviour
 
     void OnChangePickup(EquippedProp oldEquippedProp,  EquippedProp newEquippedProp)
     {
-        StartCoroutine(ChangeEquipedProp(newEquippedProp));
+        ChangeEquipedProp(newEquippedProp);
     }
 
-    IEnumerator ChangeEquipedProp(EquippedProp newEquippedProp)
+    private void ChangeEquipedProp(EquippedProp newEquippedProp)
     {
-        while (interactableArea.transform.childCount > 0)
-        {
-            Destroy(interactableArea.transform.GetChild(0).gameObject);
-            yield return null;
-        }
-
+        interactableArea.GetComponent<InteractableArea>().DestroyProp();
+                                                                      
         switch (newEquippedProp)
         {
-            case EquippedProp.prop:                
-                Instantiate(sceneProp, interactableArea.transform);
+            case EquippedProp.prop:
+                Instantiate(sceneProp.GetComponent<Prop>().PropModel(), interactableArea.transform);
                 break;
         }
     }
@@ -57,8 +53,6 @@ public class PlayerInteractions : NetworkBehaviour
     public void Update()
     {
         if(!hasAuthority) { return; }
-
-        if (sceneProp == null) { return; }
 
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {
@@ -68,6 +62,8 @@ public class PlayerInteractions : NetworkBehaviour
 
     public void Interact()
     {
+        hasProp = !hasProp;
+        
         if (hasProp)
         {
             CmdPickup(EquippedProp.prop);
@@ -75,24 +71,24 @@ public class PlayerInteractions : NetworkBehaviour
         else if (!hasProp)
         {
             CmdDrop(EquippedProp.nothing);
-        }
-
-        hasProp = !hasProp;
+        }        
     }
 
     [Command]
     public void CmdPickup(EquippedProp chosenProp)
     {
+        Debug.Log("Pickup called");
         equippedProp = chosenProp;
-        //prop.transform.SetParent(interactableArea.transform);
         sceneProp.GetComponent<PropOutline>().disableOutline();
-        //sceneProp.GetComponent<Prop>().CreatePickUpModel(interactableArea.transform);  ---> it s place might be taken by Instantiate() inside ChangeEquipedProp
         sceneProp.GetComponent<Prop>().PickingUp();
     }
 
     [Command]
     public void CmdDrop(EquippedProp drop)
     {
+        Debug.Log("drop called");
+        if (interactableArea.transform.childCount > 0)
+            Destroy(interactableArea.transform.GetChild(0).gameObject);
         equippedProp = drop;
     }
 }
