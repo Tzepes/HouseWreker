@@ -8,7 +8,9 @@ public class Prop : NetworkBehaviour
     [SerializeField]
     private Rigidbody rb;
     [SerializeField]
-    private GameObject propModel;
+    public GameObject propModel;
+    [SerializeField]
+    public GameObject propPrefab;
     private bool IsGrounded;
     private bool maxVel;
 
@@ -47,5 +49,10 @@ public class Prop : NetworkBehaviour
     public GameObject PropModel()
     {
         return propModel;
+    }
+
+    public GameObject PropPrefab()
+    {
+        return propPrefab;
     }
 }

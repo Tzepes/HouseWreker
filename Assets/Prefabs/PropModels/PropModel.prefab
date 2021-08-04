@@ -15,6 +15,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PropModel
       objectReference: {fileID: 0}
+    - target: {fileID: 7943912144326623366, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 7943912144326623374, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
       propertyPath: m_RootOrder
       value: 0

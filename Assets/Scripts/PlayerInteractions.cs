@@ -20,6 +20,9 @@ public class PlayerInteractions : NetworkBehaviour
     [SerializeField]
     private GameObject sceneProp;
 
+    [SerializeField]
+    private GameObject scenePropPrefab;
+
     [SyncVar(hook = nameof(OnChangePickup))]
     public EquippedProp equippedProp;
 
@@ -40,12 +43,14 @@ public class PlayerInteractions : NetworkBehaviour
 
     private void ChangeEquipedProp(EquippedProp newEquippedProp)
     {
-        interactableArea.GetComponent<InteractableArea>().DestroyProp();
-                                                                      
         switch (newEquippedProp)
         {
             case EquippedProp.prop:
                 Instantiate(sceneProp.GetComponent<Prop>().PropModel(), interactableArea.transform);
+                break;
+            case EquippedProp.nothing:
+                if (interactableArea.transform.childCount > 0)
+                    Destroy(interactableArea.transform.GetChild(0).gameObject);
                 break;
         }
     }
@@ -66,29 +71,41 @@ public class PlayerInteractions : NetworkBehaviour
         
         if (hasProp)
         {
-            CmdPickup(EquippedProp.prop);
+            CmdPickup();
+            CmdChangeEquippedProp(EquippedProp.prop);
         }
         else if (!hasProp)
         {
-            CmdDrop(EquippedProp.nothing);
+            CmdDrop();
+            CmdChangeEquippedProp(EquippedProp.nothing);
         }        
     }
 
     [Command]
-    public void CmdPickup(EquippedProp chosenProp)
+    public void CmdPickup()
     {
-        Debug.Log("Pickup called");
-        equippedProp = chosenProp;
+        equippedProp = EquippedProp.prop;
         sceneProp.GetComponent<PropOutline>().disableOutline();
         sceneProp.GetComponent<Prop>().PickingUp();
     }
 
     [Command]
-    public void CmdDrop(EquippedProp drop)
+    public void CmdDrop()
     {
-        Debug.Log("drop called");
-        if (interactableArea.transform.childCount > 0)
-            Destroy(interactableArea.transform.GetChild(0).gameObject);
-        equippedProp = drop;
+        Vector3 pos = interactableArea.transform.position;
+        Quaternion rot = interactableArea.transform.rotation;
+        GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
+
+        newSceneProp.GetComponent<Rigidbody>().isKinematic = false;
+
+        equippedProp = EquippedProp.nothing;
+
+        NetworkServer.Spawn(newSceneProp);
+    }
+
+    [Command]
+    void CmdChangeEquippedProp(EquippedProp selectedProp)
+    {
+        equippedProp = selectedProp;
     }
 }

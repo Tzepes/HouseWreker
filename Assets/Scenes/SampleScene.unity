@@ -1144,6 +1144,7 @@ MonoBehaviour:
   syncInterval: 0.1
   rb: {fileID: 644867837}
   propModel: {fileID: 0}
+  propPrefab: {fileID: 0}
 --- !u!1 &653260035
 GameObject:
   m_ObjectHideFlags: 0
@@ -2426,7 +2427,7 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
-  - {fileID: 6206725932478206222, guid: 1323e817be49fd24a8afb14fe8e672ad, type: 3}
+  - {fileID: 7943912144326623366, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
 --- !u!114 &1977892661
 MonoBehaviour:
   m_ObjectHideFlags: 0

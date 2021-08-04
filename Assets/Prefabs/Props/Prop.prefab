@@ -203,3 +203,4 @@ MonoBehaviour:
   syncInterval: 0.1
   rb: {fileID: 8995445081997009282}
   propModel: {fileID: 9186572682695627841, guid: 20cb0dcf5a47b0648a564ef110987a0f, type: 3}
+  propPrefab: {fileID: 7943912144326623366}

@@ -1121,6 +1121,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   interactableArea: {fileID: 3589919168068524502}
+  sceneProp: {fileID: 0}
+  scenePropPrefab: {fileID: 7943912144326623366, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
   equippedProp: 0
 --- !u!1 &3589919168068524502
 GameObject:
