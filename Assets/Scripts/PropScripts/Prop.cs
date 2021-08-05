@@ -14,12 +14,17 @@ public class Prop : NetworkBehaviour
     private bool IsGrounded;
     private bool maxVel;
 
+    [SyncVar]
+    public GameObject Parent;
+
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(Parent);
+
         if (!IsGrounded)
         {
-            if (rb.velocity.y < -6f)
+            if (rb.velocity.y < -6f || rb.velocity.x > 6f || rb.velocity.x < -6f || rb.velocity.z > 6f || rb.velocity.z < -6f)
             {
                 maxVel = true;
             }
@@ -28,6 +33,13 @@ public class Prop : NetworkBehaviour
         if (IsGrounded && maxVel)
         {
             Destroy(gameObject);
+        }
+
+        if(Parent != null)
+        {
+            transform.position = Parent.transform.position + new Vector3(1f, 0f, 0f);
+            transform.rotation = Parent.transform.rotation;
+            rb.isKinematic = true;
         }
     }
 
