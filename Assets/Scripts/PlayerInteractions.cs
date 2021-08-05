@@ -11,9 +11,12 @@ public enum EquippedProp : byte
 
 public class PlayerInteractions : NetworkBehaviour
 {
+    [SerializeField]
+    private GameObject interactableArea;
+
     private bool propInTrigger = false;
     private bool hasProp = false;
-    private Rigidbody RBprop;
+
     [SerializeField]
     private GameObject sceneProp;
 
@@ -24,12 +27,12 @@ public class PlayerInteractions : NetworkBehaviour
     public EquippedProp equippedProp;
 
     public void GetTriggerStatus(bool inTrigger)
-
+    {
         propInTrigger = inTrigger;
     }
-        //mainCamera = Camera.main;
-    }
 
+    public void GetProp(GameObject _prop)
+    {
         sceneProp = _prop;
     }
 
@@ -37,7 +40,7 @@ public class PlayerInteractions : NetworkBehaviour
     {
         ChangeEquipedProp(newEquippedProp);
     }
-        {
+
     private void ChangeEquipedProp(EquippedProp newEquippedProp)
     {
         switch (newEquippedProp)
@@ -51,7 +54,7 @@ public class PlayerInteractions : NetworkBehaviour
                 break;
         }
     }
-            Drop();
+
     public void Update()
     {
         if(!hasAuthority) { return; }
@@ -61,7 +64,7 @@ public class PlayerInteractions : NetworkBehaviour
             Interact();
         }
     }
-            RBprop.velocity = direction.normalized;
+
     public void Interact()
     {
         hasProp = !hasProp;
@@ -99,18 +102,10 @@ public class PlayerInteractions : NetworkBehaviour
 
         NetworkServer.Spawn(newSceneProp);
     }
-    {
+
     [Command]
     void CmdChangeEquippedProp(EquippedProp selectedProp)
     {
         equippedProp = selectedProp;
-    }
-
-    //[ClientRpc]
-    public void Drop()
-    {
-        prop.parent = null;
-        RBprop.constraints = RigidbodyConstraints.None;
-        RBprop.useGravity = true;
     }
 }
