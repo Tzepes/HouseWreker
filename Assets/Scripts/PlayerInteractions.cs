@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
+public enum EquippedProp : byte
+{
+    nothing,
+    prop
+}
+
 public class PlayerInteractions : NetworkBehaviour
 {
     [SerializeField]
@@ -10,87 +16,96 @@ public class PlayerInteractions : NetworkBehaviour
 
     private bool propInTrigger = false;
     private bool hasProp = false;
-    private Rigidbody RBprop;
-    private Transform prop;
 
-    private Camera mainCamera;
+    [SerializeField]
+    private GameObject sceneProp;
 
-    public override void OnStartAuthority()
+    [SerializeField]
+    private GameObject scenePropPrefab;
+
+    [SyncVar(hook = nameof(OnChangePickup))]
+    public EquippedProp equippedProp;
+
+    public void GetTriggerStatus(bool inTrigger)
     {
-        //mainCamera = Camera.main;
+        propInTrigger = inTrigger;
+    }
+
+    public void GetProp(GameObject _prop)
+    {
+        sceneProp = _prop;
+    }
+
+    void OnChangePickup(EquippedProp oldEquippedProp,  EquippedProp newEquippedProp)
+    {
+        ChangeEquipedProp(newEquippedProp);
+    }
+
+    private void ChangeEquipedProp(EquippedProp newEquippedProp)
+    {
+        switch (newEquippedProp)
+        {
+            case EquippedProp.prop:
+                Instantiate(sceneProp.GetComponent<Prop>().PropModel(), interactableArea.transform);
+                break;
+            case EquippedProp.nothing:
+                if (interactableArea.transform.childCount > 0)
+                    Destroy(interactableArea.transform.GetChild(0).gameObject);
+                break;
+        }
     }
 
     public void Update()
     {
-        // ADD CHECK FOR PLAYER AUTHORITY / IS LOCAL PLAYER
-    
-        if (prop == null) { return; }
+        if(!hasAuthority) { return; }
 
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {
-            CmdInteract();
+            Interact();
         }
+    }
 
+    public void Interact()
+    {
+        hasProp = !hasProp;
+        
         if (hasProp)
         {
-            pickUp();
+            CmdPickup();
+            CmdChangeEquippedProp(EquippedProp.prop);
         }
         else if (!hasProp)
         {
-            Drop();
-        }
+            CmdDrop();
+            CmdChangeEquippedProp(EquippedProp.nothing);
+        }        
     }
 
-    private void FixedUpdate()
+    [Command]
+    public void CmdPickup()
     {
-        if(prop != null && hasProp)
-        {
-            Vector3 direction = interactableArea.transform.position - RBprop.position;
-            RBprop.velocity = direction.normalized;
-        }
+        equippedProp = EquippedProp.prop;
+        sceneProp.GetComponent<PropOutline>().disableOutline();
+        sceneProp.GetComponent<Prop>().PickingUp();
     }
 
-    public void OnTriggerEnter(Collider other)
+    [Command]
+    public void CmdDrop()
     {
-        if (other.tag == "Prop")
-        {
-            propInTrigger = true;
-            prop = other.transform;
-            RBprop = other.gameObject.GetComponent<Rigidbody>();
-            other.GetComponent<PropOutline>().enableOutline();
-        }
+        Vector3 pos = interactableArea.transform.position;
+        Quaternion rot = interactableArea.transform.rotation;
+        GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
+
+        newSceneProp.GetComponent<Rigidbody>().isKinematic = false;
+
+        equippedProp = EquippedProp.nothing;
+
+        NetworkServer.Spawn(newSceneProp);
     }
 
-    public void OnTriggerExit(Collider other)
+    [Command]
+    void CmdChangeEquippedProp(EquippedProp selectedProp)
     {
-        if (other.tag == "Prop")
-        {
-            other.GetComponent<PropOutline>().disableOutline();
-            propInTrigger = false;
-            prop = null;
-            RBprop = null;
-        }
-    }
-
-    public void CmdInteract()
-    {
-        hasProp = !hasProp;
-    }
-
-    //[ClientRpc]
-    public void pickUp()
-    {
-        prop.SetParent(this.transform);
-        prop.GetComponent<PropOutline>().disableOutline();
-        RBprop.constraints = RigidbodyConstraints.FreezeRotation;
-        RBprop.useGravity = false;
-    }
-
-    //[ClientRpc]
-    public void Drop()
-    {
-        prop.parent = null;
-        RBprop.constraints = RigidbodyConstraints.None;
-        RBprop.useGravity = true;
+        equippedProp = selectedProp;
     }
 }
