@@ -32,6 +32,8 @@ public class PlayerCameraController : NetworkBehaviour
 
     public override void OnStartAuthority()
     {
+        if(playerTransform == null) { return; }
+
         transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
 
         virtualCamera.gameObject.SetActive(true);
@@ -55,6 +57,8 @@ public class PlayerCameraController : NetworkBehaviour
 
     private void Look(Vector2 lookAxis)
     {
+        if (playerTransform == null) { return; }
+
         float deltaTime = Time.deltaTime;
 
         transposer.m_FollowOffset.y = Mathf.Clamp(
