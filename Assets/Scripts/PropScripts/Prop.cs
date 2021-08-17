@@ -55,4 +55,13 @@ public class Prop : NetworkBehaviour
     {
         return propPrefab;
     }
+
+    public void ThrowObject(Transform playerTransform)
+    {
+        Quaternion rot = Quaternion.Euler(0, playerTransform.transform.eulerAngles.y, 0);
+
+        transform.rotation = rot;
+
+        rb.velocity = transform.forward * 10f;
+    }
 }

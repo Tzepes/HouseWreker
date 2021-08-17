@@ -22,6 +22,7 @@ public class PlayerInteractions : NetworkBehaviour
 
     [SerializeField]
     private GameObject scenePropPrefab;
+    private GameObject newSceneProp;
 
     [SyncVar(hook = nameof(OnChangePickup))]
     public EquippedProp equippedProp;
@@ -63,6 +64,12 @@ public class PlayerInteractions : NetworkBehaviour
         {
             Interact();
         }
+
+        if (Input.GetMouseButtonDown(1) && hasProp)
+        {
+            CmdChangeEquippedProp(EquippedProp.nothing);
+            CmdThrow();
+        }
     }
 
     public void Interact()
@@ -71,20 +78,19 @@ public class PlayerInteractions : NetworkBehaviour
         
         if (hasProp)
         {
-            CmdPickup();
             CmdChangeEquippedProp(EquippedProp.prop);
+            CmdPickup();
         }
         else if (!hasProp)
         {
-            CmdDrop();
             CmdChangeEquippedProp(EquippedProp.nothing);
+            CmdDrop();
         }        
     }
 
     [Command]
     public void CmdPickup()
     {
-        equippedProp = EquippedProp.prop;
         sceneProp.GetComponent<PropOutline>().disableOutline();
         sceneProp.GetComponent<Prop>().PickingUp();
     }
@@ -94,13 +100,20 @@ public class PlayerInteractions : NetworkBehaviour
     {
         Vector3 pos = interactableArea.transform.position;
         Quaternion rot = interactableArea.transform.rotation;
-        GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
+        newSceneProp = Instantiate(scenePropPrefab, pos, rot);
 
         newSceneProp.GetComponent<Rigidbody>().isKinematic = false;
 
-        equippedProp = EquippedProp.nothing;
-
         NetworkServer.Spawn(newSceneProp);
+    }
+
+    [Command]
+    public void CmdThrow()
+    {
+        CmdDrop();
+        newSceneProp.GetComponent<Prop>().ThrowObject(this.gameObject.transform);
+        newSceneProp = null;
+        hasProp = !hasProp;
     }
 
     [Command]
