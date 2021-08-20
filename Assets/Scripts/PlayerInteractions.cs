@@ -17,6 +17,8 @@ public class PlayerInteractions : NetworkBehaviour
     private bool propInTrigger = false;
     private bool hasProp = false;
 
+    RaycastHit hit;
+
     [SerializeField]
     private GameObject sceneProp;
 
@@ -58,7 +60,7 @@ public class PlayerInteractions : NetworkBehaviour
 
     public void Update()
     {
-        if(!hasAuthority) { return; }
+        if (!hasAuthority) { return; }
 
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {

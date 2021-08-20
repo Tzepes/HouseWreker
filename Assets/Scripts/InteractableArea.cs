@@ -10,14 +10,17 @@ public class InteractableArea : MonoBehaviour
 
     //PlayerInteractions playerComponent = player.GetComponent<PlayerInteractions>();
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         if (other.tag == "Prop")
         {
-            other.GetComponent<PropOutline>().enableOutline();
-            player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
-            player.GetComponent<PlayerInteractions>().GetProp(other.gameObject);
-            prop = other.gameObject;
+            if(prop == null)
+            {
+                prop = other.gameObject;
+                other.GetComponent<PropOutline>().enableOutline();
+                player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
+                player.GetComponent<PlayerInteractions>().GetProp(prop);
+            }
         }
     }
 
