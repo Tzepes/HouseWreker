@@ -16,6 +16,7 @@ public class PlayerInteractions : NetworkBehaviour
 
     private bool propInTrigger = false;
     private bool hasProp = false;
+    private bool throwCalled = false;
 
     RaycastHit hit;
 
@@ -24,7 +25,6 @@ public class PlayerInteractions : NetworkBehaviour
 
     [SerializeField]
     private GameObject scenePropPrefab;
-    private GameObject newSceneProp;
 
     [SyncVar(hook = nameof(OnChangePickup))]
     public EquippedProp equippedProp;
@@ -37,6 +37,11 @@ public class PlayerInteractions : NetworkBehaviour
     public void GetProp(GameObject _prop)
     {
         sceneProp = _prop;
+    }
+
+    public bool ReturnAuthority()
+    {
+        return hasAuthority;
     }
 
     void OnChangePickup(EquippedProp oldEquippedProp,  EquippedProp newEquippedProp)
@@ -69,8 +74,8 @@ public class PlayerInteractions : NetworkBehaviour
 
         if (Input.GetMouseButtonDown(1) && hasProp)
         {
-            CmdChangeEquippedProp(EquippedProp.nothing);
             CmdThrow();
+            Interact();
         }
     }
 
@@ -91,6 +96,12 @@ public class PlayerInteractions : NetworkBehaviour
     }
 
     [Command]
+    public void CmdThrow()
+    {
+        throwCalled = true;
+    }
+
+    [Command]
     public void CmdPickup()
     {
         sceneProp.GetComponent<PropOutline>().disableOutline();
@@ -102,21 +113,29 @@ public class PlayerInteractions : NetworkBehaviour
     {
         Vector3 pos = interactableArea.transform.position;
         Quaternion rot = interactableArea.transform.rotation;
-        newSceneProp = Instantiate(scenePropPrefab, pos, rot);
+        GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
 
         newSceneProp.GetComponent<Rigidbody>().isKinematic = false;
 
         NetworkServer.Spawn(newSceneProp);
+
+        Debug.Log(throwCalled);
+        if (throwCalled)
+        {            
+            newSceneProp.GetComponent<Prop>().ThrowObject(this.gameObject.transform);
+            newSceneProp = null;
+            throwCalled = false;
+        }
     }
 
-    [Command]
+    /*[Command]
     public void CmdThrow()
     {
         CmdDrop();
         newSceneProp.GetComponent<Prop>().ThrowObject(this.gameObject.transform);
         newSceneProp = null;
         hasProp = !hasProp;
-    }
+    }*/
 
     [Command]
     void CmdChangeEquippedProp(EquippedProp selectedProp)

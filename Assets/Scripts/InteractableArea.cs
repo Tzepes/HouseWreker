@@ -17,7 +17,10 @@ public class InteractableArea : MonoBehaviour
             if(prop == null)
             {
                 prop = other.gameObject;
-                other.GetComponent<PropOutline>().enableOutline();
+                if (player.GetComponent<PlayerInteractions>().ReturnAuthority())
+                {
+                    other.GetComponent<PropOutline>().enableOutline();
+                }
                 player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
                 player.GetComponent<PlayerInteractions>().GetProp(prop);
             }
@@ -28,7 +31,10 @@ public class InteractableArea : MonoBehaviour
     {
         if (other.tag == "Prop")
         {
-            other.GetComponent<PropOutline>().disableOutline();
+            if (player.GetComponent<PlayerInteractions>().ReturnAuthority())
+            {
+                other.GetComponent<PropOutline>().disableOutline();
+            }
             player.GetComponent<PlayerInteractions>().GetTriggerStatus(false);
             player.GetComponent<PlayerInteractions>().GetProp(null);
             prop = null;
