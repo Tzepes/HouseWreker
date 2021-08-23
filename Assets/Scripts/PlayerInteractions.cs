@@ -119,7 +119,6 @@ public class PlayerInteractions : NetworkBehaviour
 
         NetworkServer.Spawn(newSceneProp);
 
-        Debug.Log(throwCalled);
         if (throwCalled)
         {            
             newSceneProp.GetComponent<Prop>().ThrowObject(this.gameObject.transform);
@@ -127,15 +126,6 @@ public class PlayerInteractions : NetworkBehaviour
             throwCalled = false;
         }
     }
-
-    /*[Command]
-    public void CmdThrow()
-    {
-        CmdDrop();
-        newSceneProp.GetComponent<Prop>().ThrowObject(this.gameObject.transform);
-        newSceneProp = null;
-        hasProp = !hasProp;
-    }*/
 
     [Command]
     void CmdChangeEquippedProp(EquippedProp selectedProp)
