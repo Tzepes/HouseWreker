@@ -11,7 +11,8 @@ public class TestPlayerMovementTWO : NetworkBehaviour
     [SerializeField]
     private CharacterController controller = null;
     private float _directionY;
-    private float jumpSpeed = 3f;
+    private float jumpSpeed = 4f;
+    private float gravity = 9.81f;
     private Vector3 moveVector;
 
     private Vector2 previousInput;
@@ -53,14 +54,16 @@ public class TestPlayerMovementTWO : NetworkBehaviour
         }
         controller.Move(moveVector * Time.deltaTime);
 
-        if (controller.isGrounded == true)
+        if (Input.GetButtonDown("Jump") && controller.isGrounded == true)
         {
-            if (Input.GetButtonDown("Jump"))
-            {
-                Jump();
-                //Debug.Log("Space was pressed");
-            }
+            Jump();
         }
+
+        _directionY -= gravity * Time.deltaTime;
+
+        moveVector.y = _directionY;
+
+        controller.Move(moveVector * movementSpeed * Time.deltaTime);
     }
 
     [Client]
@@ -91,7 +94,6 @@ public class TestPlayerMovementTWO : NetworkBehaviour
     [Client]
     private void Jump()
     {
-        moveVector.y = jumpSpeed;
-        controller.Move(moveVector.normalized * 6f * Time.deltaTime);
+        _directionY = jumpSpeed;
     }
 }
