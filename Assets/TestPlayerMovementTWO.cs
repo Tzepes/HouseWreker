@@ -13,6 +13,9 @@ public class TestPlayerMovementTWO : NetworkBehaviour
     private float _directionY;
     private float jumpSpeed = 4f;
     private float gravity = 9.81f;
+
+    private bool jumping = false;
+
     private Vector3 moveVector;
 
     private Vector2 previousInput;
@@ -57,13 +60,23 @@ public class TestPlayerMovementTWO : NetworkBehaviour
         if (Input.GetButtonDown("Jump") && controller.isGrounded == true)
         {
             Jump();
+            jumping = true;
         }
 
-        _directionY -= gravity * Time.deltaTime;
+        if (jumping)
+        {
+            _directionY -= gravity * Time.deltaTime;
 
-        moveVector.y = _directionY;
+            moveVector.y = _directionY;
 
-        controller.Move(moveVector * movementSpeed * Time.deltaTime);
+            controller.Move(moveVector * movementSpeed * Time.deltaTime);
+
+            if (controller.isGrounded)
+            {
+                jumping = false;
+            }
+        }
+
     }
 
     [Client]
