@@ -4,7 +4,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TestPlayerMovementTWO : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [SerializeField]
     private float movementSpeed = 5f;
@@ -47,6 +47,8 @@ public class TestPlayerMovementTWO : NetworkBehaviour
     [ClientCallback]
     private void Update()
     {
+        if(!hasAuthority) { return; }
+
         Move();
 
         moveVector = Vector3.zero;
