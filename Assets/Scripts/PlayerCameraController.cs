@@ -15,6 +15,11 @@ public class PlayerCameraController : NetworkBehaviour
     [SerializeField]
     private CinemachineVirtualCamera virtualCamera = null;
 
+    public void GetPlayerTypeTransform(Transform transform)
+    {
+        playerTransform = transform;
+    }
+
     private Controls controls;
     private Controls Controls
     {

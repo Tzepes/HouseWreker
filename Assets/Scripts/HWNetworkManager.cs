@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
+public struct PlayerTypeMessage : NetworkMessage
+{
+    public PlayerType playerType;
+}
+
 public enum PlayerType
 {
     Human,
@@ -11,7 +16,14 @@ public enum PlayerType
 
 public class HWNetworkManager : NetworkManager
 {
-    void OnCreateCharacter(NetworkConnection conn)
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        NetworkServer.RegisterHandler<PlayerTypeMessage>(OnCreateCharacter);
+    }
+
+    void OnCreateCharacter(NetworkConnection conn, PlayerTypeMessage message)
     {
         GameObject gameobject = Instantiate(playerPrefab);
 

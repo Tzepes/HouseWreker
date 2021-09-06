@@ -4,7 +4,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : NetworkBehaviour
+public class HWPlayerMovement : NetworkBehaviour
 {
     [SerializeField]
     private float movementSpeed = 5f;
