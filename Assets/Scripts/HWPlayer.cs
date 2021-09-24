@@ -14,30 +14,35 @@ public class HWPlayer : NetworkBehaviour
     private GameObject humanPlayer;
     [SerializeField]
     private GameObject catPlayer;
-    private GameObject currentPlayerType;
 
-    public enum Type
+    private string playerType = "Cat";
+
+    public void SetPlayerType(string typeChoice)
     {
-        Cat,
-        Human
+        playerType = typeChoice;
+    }
+
+    public GameObject GetPlayerTypePrefab()
+    {
+        if(playerType == "Cat")
+        {
+            return catPlayer;
+        }
+        if(playerType == "Human")
+        {
+            return humanPlayer;
+        }
+
+        return null;
     }
 
     public override void OnStartAuthority()
     {
+        if(!interactableArea) { return; }
+
         interactableArea.SetActive(true);
-        if ((int)Type.Cat == 1)
-        {
-            catPlayer.SetActive(true);
-        }
 
-        if ((int)Type.Human == 0)
-        {
-            humanPlayer.SetActive(true);
-        }
-
-        player.GetComponent<PlayerCameraController>().GetPlayerTypeTransform(currentPlayerType.transform); // make a function in camera controller to take the transform 
+       // player.GetComponent<PlayerCameraController>().GetPlayerTypeTransform(currentPlayerType.transform); // make a function in camera controller to take the transform 
                                                                                                      // and call it here
-        
-
     }
 }
