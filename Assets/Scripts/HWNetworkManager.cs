@@ -58,19 +58,22 @@ public class HWNetworkManager : NetworkManager
         isGameInProgress = true;
 
         ServerChangeScene("SampleScene");
+
+        //OnCreateCharacter();
     }
 
     public override void OnStartServer()
     {
         base.OnStartServer();
-        
+        //NetworkServer.RegisterHandler<PlayerTypeMessage>(OnCreateCharacter);
+        //OnCreateCharacter(conn);
     }
 
     // In order to have the player be spawned based on chosen type after the Start Game button was pressed from the lobby,
     // must call "NetworkServer.RegisterHandler<PlayerTypeMessage>(OnCreateCharacter);"
     // in another function: public override void OnServerSceneChanged(string sceneName) ----> Look on https://gitlab.com/GameDevTV/UnityMultiplayer/RealTimeStrategy/-/commit/1842e67e8bcc2f43bae7d884de41ca53ec81fe39
 
-    void OnCreateCharacter(NetworkConnection conn, PlayerTypeMessage message)
+    void OnCreateCharacter(NetworkConnection conn)
     {
         Debug.Log("OnCreateCharacter called");
 
@@ -97,10 +100,16 @@ public class HWNetworkManager : NetworkManager
         Players.Add(player);
 
         player.SetPartyOwner(Players.Count == 1);
+    }
 
-        if (SceneManager.GetActiveScene().name == "SampleScene")
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        if(SceneManager.GetActiveScene().name == "SampleScene")
         {
-            NetworkServer.RegisterHandler<PlayerTypeMessage>(OnCreateCharacter);
+            foreach(HWPlayer player in Players)
+            {
+                OnCreateCharacter(player.connectionToClient);
+            }
         }
     }
 
