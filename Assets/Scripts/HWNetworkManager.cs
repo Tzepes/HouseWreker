@@ -5,16 +5,6 @@ using UnityEngine.SceneManagement;
 using Mirror;
 using UnityEngine;
 
-public struct PlayerTypeMessage : NetworkMessage
-{
-    public PlayerType playerType;
-}
-
-public enum PlayerType
-{
-    Player
-}
-
 public class HWNetworkManager : NetworkManager
 {
     public static event Action ClientOnConnected;
@@ -48,8 +38,6 @@ public class HWNetworkManager : NetworkManager
 
         isGameInProgress = false;
     }
-    
-    // Start Game button will not appear if the auto create check box is False, and if it's on true, the chosen player type wont be spawned.
 
     public void StartGame()
     {
@@ -58,20 +46,7 @@ public class HWNetworkManager : NetworkManager
         isGameInProgress = true;
 
         ServerChangeScene("SampleScene");
-
-        //OnCreateCharacter();
     }
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-        //NetworkServer.RegisterHandler<PlayerTypeMessage>(OnCreateCharacter);
-        //OnCreateCharacter(conn);
-    }
-
-    // In order to have the player be spawned based on chosen type after the Start Game button was pressed from the lobby,
-    // must call "NetworkServer.RegisterHandler<PlayerTypeMessage>(OnCreateCharacter);"
-    // in another function: public override void OnServerSceneChanged(string sceneName) ----> Look on https://gitlab.com/GameDevTV/UnityMultiplayer/RealTimeStrategy/-/commit/1842e67e8bcc2f43bae7d884de41ca53ec81fe39
 
     void OnCreateCharacter(NetworkConnection conn)
     {
@@ -120,12 +95,6 @@ public class HWNetworkManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
-
-        PlayerTypeMessage playerMessage = new PlayerTypeMessage
-        {
-            playerType = PlayerType.Player
-        };
-        conn.Send(playerMessage);
 
         ClientOnConnected?.Invoke();
     }
