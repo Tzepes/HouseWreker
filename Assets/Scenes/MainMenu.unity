@@ -2068,7 +2068,7 @@ MonoBehaviour:
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 5937991473861296280, guid: 7074974fb23cb69459e99d0dd94c045c, type: 3}
-  autoCreatePlayer: 0
+  autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 2994760246694607246, guid: ef23db8d2a1f8f14aaf57e5a2d596ef3, type: 3}
@@ -2538,6 +2538,7 @@ GameObject:
   - component: {fileID: 1100974162}
   - component: {fileID: 1100974161}
   - component: {fileID: 1100974163}
+  - component: {fileID: 1100974164}
   m_Layer: 0
   m_Name: EnterAddress
   m_TagString: Untagged
@@ -2618,6 +2619,23 @@ MonoBehaviour:
   landingPagePanel: {fileID: 2006406294}
   addressInput: {fileID: 1242036137}
   joinButton: {fileID: 1815621021}
+--- !u!114 &1100974164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100974159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 829327503
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!1 &1151260778
 GameObject:
   m_ObjectHideFlags: 0
@@ -4050,6 +4068,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2106160070}
   - component: {fileID: 2106160071}
+  - component: {fileID: 2106160072}
   m_Layer: 0
   m_Name: LobbyParrent
   m_TagString: Untagged
@@ -4091,6 +4110,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lobbyUI: {fileID: 205668364}
   startGameButton: {fileID: 1303028840}
+--- !u!114 &2106160072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106160069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 3477767092
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!1 &2120680788
 GameObject:
   m_ObjectHideFlags: 0
@@ -4249,31 +4285,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 527
+      value: 528.1
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 348
+      value: 411
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.084
+      value: -17.4
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.0054021124
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000021855694
+      value: -1.1806696e-10
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.9999854
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.000000021855376
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4281,7 +4317,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -180.619
       objectReference: {fileID: 0}
     - target: {fileID: 8213951108333365165, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -4290,6 +4326,10 @@ PrefabInstance:
     - target: {fileID: 8842256773345885463, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
       propertyPath: m_Name
       value: pumpkin_lights_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8842256773345885463, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13219c1d85050e44191f9dc91a97a90f, type: 3}
