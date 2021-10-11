@@ -50,8 +50,6 @@ public class HWNetworkManager : NetworkManager
 
     void OnCreateCharacter(NetworkConnection conn)
     {
-        Debug.Log("OnCreateCharacter called");
-
         GameObject gameobject = Instantiate(playerPrefab);
 
         HWPlayer player = gameobject.GetComponent<HWPlayer>();
@@ -64,6 +62,8 @@ public class HWNetworkManager : NetworkManager
         GameObject playerToSpawn = Instantiate(playerTypePrefab);
 
         NetworkServer.AddPlayerForConnection(conn, playerToSpawn);
+
+        NetworkServer.Destroy(gameobject);
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn)
