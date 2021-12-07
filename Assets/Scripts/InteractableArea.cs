@@ -17,12 +17,12 @@ public class InteractableArea : MonoBehaviour
             if(prop == null)
             {
                 prop = other.gameObject;
+                player.GetComponent<PlayerInteractions>().GetProp(prop);
                 if (player.GetComponent<PlayerInteractions>().ReturnAuthority())
                 {
                     other.GetComponent<PropOutline>().enableOutline();
                 }
                 player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
-                player.GetComponent<PlayerInteractions>().GetProp(prop);
             }
         }
     }

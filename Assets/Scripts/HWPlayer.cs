@@ -16,7 +16,9 @@ public class HWPlayer : NetworkBehaviour
     [SerializeField]
     private GameObject catPlayer;
 
-    private string playerType = "Cat";
+    [SerializeField]
+    private string playerType;
+
     [SyncVar(hook = nameof(AuthorityHandlePartyOwnerStateUpdated))]
     private bool isPartyOwner = false;
 
@@ -27,9 +29,20 @@ public class HWPlayer : NetworkBehaviour
         return isPartyOwner;
     }
 
-    public void SetPlayerType(string typeChoice)
+    [Command]
+    public void SetPlayerType(string newTypeChoice)
     {
-        playerType = typeChoice;
+        playerType = newTypeChoice;
+    }
+
+    public void HWSetPlayerType(string newTypeChoice)
+    {
+        playerType = newTypeChoice;
+    }
+
+    public String GetPlayerType()
+    {
+        return playerType;
     }
 
     [Server]
@@ -43,12 +56,21 @@ public class HWPlayer : NetworkBehaviour
     {
         if(!isPartyOwner) { return; }
 
+        ((HWNetworkManager)NetworkManager.singleton).SetPlayerTypes();
+
         ((HWNetworkManager)NetworkManager.singleton).StartGame();
+    }
+
+    public override void OnStartServer()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void OnStartClient()
     {
         if(NetworkServer.active) { return; }
+
+        DontDestroyOnLoad(gameObject);
 
         ((HWNetworkManager)NetworkManager.singleton).Players.Add(this);
     }

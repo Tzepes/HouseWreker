@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 8891353517443688560}
   - component: {fileID: 7054063282539241108}
   m_Layer: 0
-  m_Name: Bean
+  m_Name: Human
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 1085785730818497007}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.61, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_Children:
   - {fileID: 897298556275647247}
   - {fileID: 6442011995627986678}
@@ -344,7 +344,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  player: {fileID: 0}
   interactableArea: {fileID: 2246026326560705512}
+  humanPlayer: {fileID: 0}
+  catPlayer: {fileID: 0}
+  playerType: 
 --- !u!114 &2293513893961326443
 MonoBehaviour:
   m_ObjectHideFlags: 0

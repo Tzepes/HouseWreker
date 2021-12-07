@@ -13,6 +13,7 @@ public class HWNetworkManager : NetworkManager
     private bool isGameInProgress = false;
 
     public List<HWPlayer> Players { get; } = new List<HWPlayer>();
+    public List<String> ChosenPlayerTypes { get; } = new List<String>();
 
     #region Server
 
@@ -35,6 +36,7 @@ public class HWNetworkManager : NetworkManager
     public override void OnStopServer()
     {
         Players.Clear();
+        ChosenPlayerTypes.Clear();
 
         isGameInProgress = false;
     }
@@ -48,18 +50,41 @@ public class HWNetworkManager : NetworkManager
         ServerChangeScene("SampleScene");
     }
 
-    void OnCreateCharacter(NetworkConnection conn)
+    public void SetPlayerTypes()
+    {
+        foreach (HWPlayer player in Players)
+        {
+            if (player.GetPlayerType() == "None" || player.GetPlayerType() == null)
+            {
+                return;
+            }
+
+            ChosenPlayerTypes.Add(player.GetPlayerType());
+        }
+        DebugPlayerTypeList();
+    }
+
+    void DebugPlayerTypeList()
+    {
+        foreach(String playerType in ChosenPlayerTypes)
+        {
+            Debug.Log(playerType);
+        }
+    }
+
+    void OnCreateCharacter(NetworkConnection conn, String playerType)
     {
         GameObject gameobject = Instantiate(playerPrefab);
 
         HWPlayer player = gameobject.GetComponent<HWPlayer>();
 
-        // UI player choice will be taken and passed in SetPlayerType();
-        player.SetPlayerType("Cat");
+        player.HWSetPlayerType(playerType);
 
         GameObject playerTypePrefab = player.GetPlayerTypePrefab();
-
+        
         GameObject playerToSpawn = Instantiate(playerTypePrefab);
+
+        NetworkServer.ReplacePlayerForConnection(conn, playerToSpawn);
 
         NetworkServer.AddPlayerForConnection(conn, playerToSpawn);
 
@@ -75,15 +100,18 @@ public class HWNetworkManager : NetworkManager
         Players.Add(player);
 
         player.SetPartyOwner(Players.Count == 1);
+
     }
 
     public override void OnServerSceneChanged(string sceneName)
     {
         if(SceneManager.GetActiveScene().name == "SampleScene")
         {
+            int pTypeIndex = 0;
             foreach(HWPlayer player in Players)
             {
-                OnCreateCharacter(player.connectionToClient);
+                OnCreateCharacter(player.connectionToClient, ChosenPlayerTypes[pTypeIndex]);
+                pTypeIndex++;
             }
         }
     }

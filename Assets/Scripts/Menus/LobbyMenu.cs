@@ -34,6 +34,16 @@ public class LobbyMenu : MonoBehaviour
         startGameButton.gameObject.SetActive(state);
     }
 
+    public void CatButton()
+    {
+        NetworkClient.connection.identity.GetComponent<HWPlayer>().SetPlayerType("Cat");
+    }
+
+    public void HumanButton()
+    {
+        NetworkClient.connection.identity.GetComponent<HWPlayer>().SetPlayerType("Human");
+    }
+
     public void StartGame()
     {
         NetworkClient.connection.identity.GetComponent<HWPlayer>().CmdStartGame();
