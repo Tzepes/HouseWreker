@@ -122,7 +122,7 @@ public class HWNetworkManager : NetworkManager
     [ContextMenu("Send Score")]
     public void SendScore()
     {
-        NetworkServer.SendToAll(new Score.ScoreMessage { score = gameScore });
+        NetworkServer.SendToAll(new ScoreDisplay.ScoreMessage { score = gameScore });
     }
 
     #endregion

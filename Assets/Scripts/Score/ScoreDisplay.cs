@@ -1,31 +1,44 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Mirror;
 using UnityEngine;
 
 public class ScoreDisplay : MonoBehaviour
 {
-    /*[SerializeField] 
+    [SerializeField] 
     private TMP_Text scoreText = null;
-    [SerializeField]
-    private Score scoreScript;
-    private int score = 0;
+    private int currentScore = 0;
 
-    public void SetScore(int newScore)
+    public struct ScoreMessage : NetworkMessage
     {
-        score += newScore;
-        scoreScript.SendScore(newScore);
-        ClientHandleScoreUpdated(score);
+        public int score;
     }
 
-    private void ClientHandleScoreUpdated(int score)
+    private void Start()
     {
-        scoreText.text = "Score: " + $"\n{score}";
-        Debug.Log(score);
+        if (!NetworkClient.active) { return; }
+
+        NetworkClient.ReplaceHandler<ScoreMessage>(OnScore);
     }
 
-    private void OnDestroy()
+    public void SetScore(int score)
     {
-        score = 0;
-    }*/
+        ScoreMessage msg = new ScoreMessage()
+        {
+            score = score
+        };
+
+        NetworkServer.SendToAll(msg);
+
+    }
+
+
+    public void OnScore(NetworkConnection conn, ScoreMessage msg)
+    {
+        currentScore = msg.score + currentScore;
+        scoreText.text = "Score: " + $"\n{currentScore}";
+        Debug.Log("OnScoreMessage " + currentScore);
+    }
 }

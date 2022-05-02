@@ -14,8 +14,6 @@ public class Prop : NetworkBehaviour
     private bool IsGrounded;
     private bool maxVel;
     [SerializeField]
-    private Score scoreScript;
-    [SerializeField]
     private ScoreDisplay scoreDisplay;
 
     // Update is called once per frame
@@ -32,8 +30,7 @@ public class Prop : NetworkBehaviour
         if (IsGrounded && maxVel)
         {
             Destroy(gameObject);
-            scoreScript.SendScore(50);
-            //scoreDisplay.SetScore(50);
+            scoreDisplay.SetScore(50);
         }
     }
 
