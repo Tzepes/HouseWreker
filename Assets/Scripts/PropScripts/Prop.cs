@@ -13,6 +13,10 @@ public class Prop : NetworkBehaviour
     public GameObject propPrefab;
     private bool IsGrounded;
     private bool maxVel;
+    [SerializeField]
+    private Score scoreScript;
+    [SerializeField]
+    private ScoreDisplay scoreDisplay;
 
     // Update is called once per frame
     void Update()
@@ -28,6 +32,8 @@ public class Prop : NetworkBehaviour
         if (IsGrounded && maxVel)
         {
             Destroy(gameObject);
+            scoreScript.SendScore(50);
+            //scoreDisplay.SetScore(50);
         }
     }
 
@@ -64,4 +70,5 @@ public class Prop : NetworkBehaviour
 
         rb.velocity = transform.forward * 10f;
     }
+
 }

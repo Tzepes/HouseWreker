@@ -15,6 +15,9 @@ public class HWNetworkManager : NetworkManager
     public List<HWPlayer> Players { get; } = new List<HWPlayer>();
     public List<String> ChosenPlayerTypes { get; } = new List<String>();
 
+    [SerializeField]
+    private int gameScore;
+
     #region Server
 
     public override void OnServerConnect(NetworkConnection conn)
@@ -114,6 +117,12 @@ public class HWNetworkManager : NetworkManager
                 pTypeIndex++;
             }
         }
+    }
+
+    [ContextMenu("Send Score")]
+    public void SendScore()
+    {
+        NetworkServer.SendToAll(new Score.ScoreMessage { score = gameScore });
     }
 
     #endregion
