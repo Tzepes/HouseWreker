@@ -10,6 +10,8 @@ public class HWPlayer : NetworkBehaviour
     private GameObject player;
     [SerializeField]
     private GameObject interactableArea;
+    [SerializeField]
+    public GameObject mainCamera;
 
     [SerializeField]
     private GameObject humanPlayer;
@@ -69,7 +71,7 @@ public class HWPlayer : NetworkBehaviour
     public override void OnStartClient()
     {
         if(NetworkServer.active) { return; }
-
+        
         DontDestroyOnLoad(gameObject);
 
         ((HWNetworkManager)NetworkManager.singleton).Players.Add(this);

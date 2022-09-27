@@ -11,6 +11,10 @@ public class HWNetworkManager : NetworkManager
     public static event Action ClientOnDisconnected;
 
     private bool isGameInProgress = false;
+    private string mapToChangeTo = "SampleScene";
+
+    [SerializeField]
+    public Camera mainCam;
 
     public List<HWPlayer> Players { get; } = new List<HWPlayer>();
     public List<String> ChosenPlayerTypes { get; } = new List<String>();
@@ -50,7 +54,7 @@ public class HWNetworkManager : NetworkManager
 
         isGameInProgress = true;
 
-        ServerChangeScene("SampleScene");
+        ServerChangeScene(mapToChangeTo);
     }
 
     public void SetPlayerTypes()
@@ -85,13 +89,11 @@ public class HWNetworkManager : NetworkManager
 
         GameObject playerTypePrefab = player.GetPlayerTypePrefab();
         
+        Destroy(gameobject, 0.1f);
+        
         GameObject playerToSpawn = Instantiate(playerTypePrefab);
-
+        
         NetworkServer.ReplacePlayerForConnection(conn, playerToSpawn);
-
-        NetworkServer.AddPlayerForConnection(conn, playerToSpawn);
-
-        NetworkServer.Destroy(gameobject);
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn)
@@ -108,7 +110,7 @@ public class HWNetworkManager : NetworkManager
 
     public override void OnServerSceneChanged(string sceneName)
     {
-        if(SceneManager.GetActiveScene().name == "SampleScene")
+        if(SceneManager.GetActiveScene().name == mapToChangeTo)
         {
             int pTypeIndex = 0;
             foreach(HWPlayer player in Players)

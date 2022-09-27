@@ -18,7 +18,6 @@ GameObject:
   - component: {fileID: -7106354247190792592}
   - component: {fileID: -6841819786932274029}
   - component: {fileID: 7503451674911700644}
-  - component: {fileID: 3607640749839140739}
   m_Layer: 6
   m_Name: Prop
   m_TagString: Prop
@@ -205,18 +204,4 @@ MonoBehaviour:
   rb: {fileID: 8995445081997009282}
   propModel: {fileID: 9186572682695627841, guid: 20cb0dcf5a47b0648a564ef110987a0f, type: 3}
   propPrefab: {fileID: 7943912144326623366}
-  scoreScript: {fileID: 3607640749839140739}
   scoreDisplay: {fileID: 2743283739278332643, guid: 1b4db32af2c418d47a4f62a881a4d5f4, type: 3}
---- !u!114 &3607640749839140739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7943912144326623366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e77167a1fb7dfc84186c42fb2476a3a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentScore: 0

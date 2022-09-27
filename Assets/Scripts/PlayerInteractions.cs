@@ -15,6 +15,7 @@ public class PlayerInteractions : NetworkBehaviour
     private GameObject interactableArea;
 
     private bool propInTrigger = false;
+    [SerializeField]
     private bool hasProp = false;
     private bool throwCalled = false;
 
@@ -54,6 +55,10 @@ public class PlayerInteractions : NetworkBehaviour
         switch (newEquippedProp)
         {
             case EquippedProp.prop:
+                if (!sceneProp) { 
+                    Debug.Log("PROP NULL!");
+                    return;
+                }
                 Instantiate(sceneProp.GetComponent<Prop>().PropModel(), interactableArea.transform);
                 break;
             case EquippedProp.nothing:
@@ -71,7 +76,7 @@ public class PlayerInteractions : NetworkBehaviour
         {
             Interact();
         }
-
+        
         if (Input.GetMouseButtonDown(1) && hasProp)
         {
             CmdThrow();
@@ -83,16 +88,17 @@ public class PlayerInteractions : NetworkBehaviour
     {
         hasProp = !hasProp;
         
+        if (!hasProp)
+        {
+            CmdDrop(EquippedProp.nothing);
+        }
+        
+        if (!sceneProp) { return; }
+
         if (hasProp)
         {
-            CmdChangeEquippedProp(EquippedProp.prop);
-            CmdPickup();
+            CmdPickup(EquippedProp.prop);
         }
-        else if (!hasProp)
-        {
-            CmdChangeEquippedProp(EquippedProp.nothing);
-            CmdDrop();
-        }        
     }
 
     [Command]
@@ -102,15 +108,18 @@ public class PlayerInteractions : NetworkBehaviour
     }
 
     [Command]
-    public void CmdPickup()
+    public void CmdPickup(EquippedProp selectedProp)
     {
+        equippedProp = selectedProp;        
         sceneProp.GetComponent<PropOutline>().disableOutline();
         sceneProp.GetComponent<Prop>().PickingUp();
     }
 
     [Command]
-    public void CmdDrop()
+    public void CmdDrop(EquippedProp selectedProp)
     {
+        equippedProp = selectedProp;
+
         Vector3 pos = interactableArea.transform.position;
         Quaternion rot = interactableArea.transform.rotation;
         GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
@@ -125,11 +134,5 @@ public class PlayerInteractions : NetworkBehaviour
             newSceneProp = null;
             throwCalled = false;
         }
-    }
-
-    [Command]
-    void CmdChangeEquippedProp(EquippedProp selectedProp)
-    {
-        equippedProp = selectedProp;
     }
 }

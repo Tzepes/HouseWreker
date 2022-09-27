@@ -6,11 +6,9 @@ public class InteractableArea : MonoBehaviour
 {
     [SerializeField]
     private GameObject player;
-    private GameObject prop;
+    private GameObject prop = null;
 
-    //PlayerInteractions playerComponent = player.GetComponent<PlayerInteractions>();
-
-    public void OnTriggerStay(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Prop")
         {
@@ -21,8 +19,8 @@ public class InteractableArea : MonoBehaviour
                 if (player.GetComponent<PlayerInteractions>().ReturnAuthority())
                 {
                     other.GetComponent<PropOutline>().enableOutline();
+                    player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
                 }
-                player.GetComponent<PlayerInteractions>().GetTriggerStatus(true);
             }
         }
     }

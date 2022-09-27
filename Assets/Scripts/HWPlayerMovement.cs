@@ -10,8 +10,12 @@ public class HWPlayerMovement : NetworkBehaviour
     private float movementSpeed = 5f;
     [SerializeField]
     private CharacterController controller = null;
+    [SerializeField]
+    public Transform cam;
     private float _directionY;
     private float jumpSpeed = 4f;
+    private float turnSmoothTime = 0.05f;
+    private float turnSmoothVelocity;
     private float gravity = 9.81f;
 
     private bool jumping = false;
@@ -36,6 +40,9 @@ public class HWPlayerMovement : NetworkBehaviour
 
         Controls.Player.Move.performed += ctx => SetMovement(ctx.ReadValue<Vector2>());
         Controls.Player.Move.canceled += ctx => ResetMovement();
+
+        GameObject mainCamObj = GameObject.Find("Main Camera");
+        cam = mainCamObj.transform;
     }
 
     [ClientCallback]
@@ -96,14 +103,20 @@ public class HWPlayerMovement : NetworkBehaviour
     [Client]
     private void Move()
     {
-        Vector3 right = controller.transform.right;
-        Vector3 forward = controller.transform.forward;
-        right.y = 0f;
-        forward.y = 0f;
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        Vector3 movement = right.normalized * previousInput.x + forward.normalized * previousInput.y;
+        if(direction.magnitude >= 0.1f)
+        {
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            Debug.Log(cam);
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-        controller.Move(movement * movementSpeed * Time.deltaTime);
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            controller.Move(moveDir.normalized * movementSpeed * Time.deltaTime);
+        }
     }
 
     [Client]

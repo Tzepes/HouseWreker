@@ -45,7 +45,7 @@ public class PlayerCameraController : NetworkBehaviour
 
         enabled = true;
 
-        Controls.Player.Look.performed += ctx => Look(ctx.ReadValue<Vector2>());
+        //Controls.Player.Look.performed += ctx => Look(ctx.ReadValue<Vector2>());
     }
 
     [ClientCallback]
@@ -60,6 +60,7 @@ public class PlayerCameraController : NetworkBehaviour
         Controls.Disable();
     }
 
+    //Player rotates with camera
     private void Look(Vector2 lookAxis)
     {
         if (playerTransform == null) { return; }

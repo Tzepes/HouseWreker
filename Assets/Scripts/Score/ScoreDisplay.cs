@@ -8,7 +8,7 @@ using UnityEngine;
 public class ScoreDisplay : MonoBehaviour
 {
     [SerializeField] 
-    private TMP_Text scoreText = null;
+    private TMP_Text scoreText; // probably check for null required?
     private int currentScore = 0;
 
     public struct ScoreMessage : NetworkMessage
@@ -33,7 +33,6 @@ public class ScoreDisplay : MonoBehaviour
         NetworkServer.SendToAll(msg);
 
     }
-
 
     public void OnScore(NetworkConnection conn, ScoreMessage msg)
     {

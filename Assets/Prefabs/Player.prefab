@@ -65,5 +65,7 @@ MonoBehaviour:
   syncInterval: 0.1
   player: {fileID: 0}
   interactableArea: {fileID: 0}
+  mainCamera: {fileID: 2165222804242080475, guid: e686fbe7588f9c94f95b151749e351d4, type: 3}
   humanPlayer: {fileID: 1085785730818497007, guid: 517ff9062f284dd4d96ec1d3e4cd2bea, type: 3}
   catPlayer: {fileID: 2994760246694607246, guid: ef23db8d2a1f8f14aaf57e5a2d596ef3, type: 3}
+  playerType: 
