@@ -16,6 +16,8 @@ public class InteractableArea : MonoBehaviour
             {
                 prop = other.gameObject;
                 player.GetComponent<PlayerInteractions>().GetProp(prop);
+                //player.GetComponent<PlayerInteractions>().GetPropMesh(); //get mesh
+                //get collider type
                 if (player.GetComponent<PlayerInteractions>().ReturnAuthority())
                 {
                     other.GetComponent<PropOutline>().enableOutline();

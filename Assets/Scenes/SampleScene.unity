@@ -1605,6 +1605,10 @@ PrefabInstance:
       propertyPath: sceneId
       value: 2582293871
       objectReference: {fileID: 0}
+    - target: {fileID: 7759319968303909158, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7943912144326623366, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
       propertyPath: m_Name
       value: Prop (2)
@@ -1653,7 +1657,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5942571173981121304, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
+    - {fileID: 999829144906237975, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
 --- !u!1 &1156027701
 GameObject:

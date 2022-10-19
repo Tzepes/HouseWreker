@@ -125,6 +125,9 @@ public class PlayerInteractions : NetworkBehaviour
         GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
 
         newSceneProp.GetComponent<Rigidbody>().isKinematic = false;
+        //apply mesh
+        //apply collider type
+        //apply mesh to collider type
 
         NetworkServer.Spawn(newSceneProp);
 

@@ -11,7 +11,7 @@ public class HWNetworkManager : NetworkManager
     public static event Action ClientOnDisconnected;
 
     private bool isGameInProgress = false;
-    private string mapToChangeTo = "SampleScene";
+    private string mapToChangeTo = "LowPolyInterior2_Demo";
 
     [SerializeField]
     public Camera mainCam;
