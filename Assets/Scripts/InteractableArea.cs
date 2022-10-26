@@ -10,7 +10,7 @@ public class InteractableArea : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Prop")
+        if (other.tag == "Prop" && !player.GetComponent<PlayerInteractions>().HasProp())
         {
             if(prop == null) 
             {

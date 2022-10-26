@@ -67,7 +67,12 @@ public class PlayerInteractions : NetworkBehaviour
         scenePropScale = pickedPropScale;
     }
 
-    private Vector3 CalculateScale(Vector3 propScale)
+    public bool HasProp()
+    {
+        return hasProp;
+    }
+
+    private Vector3 CalculateScale(Vector3 propScale) // function currently works only if all x, y, z coords for scale are equal
     {
         float missingPercent = 1 - scenePropScale.x;
         
@@ -91,7 +96,7 @@ public class PlayerInteractions : NetworkBehaviour
     {
         switch (newEquippedProp)
         {
-            case EquippedProp.prop:
+            case EquippedProp.prop: //prop is held by player
                 if (!sceneProp) { 
                     Debug.Log("PROP NULL!");
                     return;
@@ -103,8 +108,9 @@ public class PlayerInteractions : NetworkBehaviour
                 {
                     pickedProp.transform.localScale = CalculateScale(pickedProp.transform.localScale);
                 }
+                pickedProp.AddComponent<BoxCollider>();
                 break;
-            case EquippedProp.nothing:
+            case EquippedProp.nothing: // prop is dropped by player
                 if (interactableArea.transform.childCount > 0)
                     Destroy(interactableArea.transform.GetChild(0).gameObject);
                 break;
@@ -118,20 +124,20 @@ public class PlayerInteractions : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.E) && (propInTrigger || hasProp))
         {
             Interact();
-        }
-        
-        if(!propInTrigger || !hasProp)
-        {
-            scenePropMesh = null;
-            scenePropColliderM = null;
-            scenePropColliderB = null;
-        }
+        }               
 
         if (Input.GetMouseButtonDown(1) && hasProp)
         {
             CmdThrow();
             Interact();
         }
+
+        /*if (!propInTrigger || !hasProp)
+        {
+            scenePropMesh = null;
+            scenePropColliderM = null;
+            scenePropColliderB = null;
+        }*/
     }
 
     public void Interact()
@@ -175,9 +181,11 @@ public class PlayerInteractions : NetworkBehaviour
         GameObject newSceneProp = Instantiate(scenePropPrefab, pos, rot);
 
         newSceneProp.GetComponent<Rigidbody>().isKinematic = false;
-        //apply mesh
-        //apply collider type
-        //apply mesh to collider type
+        newSceneProp.GetComponent<MeshFilter>().mesh = scenePropMesh; //apply mesh
+                                                                      //apply collider type
+        newSceneProp.GetComponent<MeshCollider>().sharedMesh = scenePropMesh;//apply mesh to collider type
+
+        newSceneProp.transform.localScale = CalculateScale(newSceneProp.transform.localScale);
 
         NetworkServer.Spawn(newSceneProp);
 
