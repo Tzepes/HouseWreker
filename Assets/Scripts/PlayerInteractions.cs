@@ -23,6 +23,13 @@ public class PlayerInteractions : NetworkBehaviour
 
     [SerializeField]
     private GameObject sceneProp;
+    [SerializeField]
+    private Mesh scenePropMesh;
+    [SerializeField]
+    private BoxCollider scenePropColliderB;
+    [SerializeField]
+    private MeshCollider scenePropColliderM;
+    private Vector3 scenePropScale; 
 
     [SerializeField]
     private GameObject scenePropPrefab;
@@ -38,6 +45,36 @@ public class PlayerInteractions : NetworkBehaviour
     public void GetProp(GameObject _prop)
     {
         sceneProp = _prop;
+    }
+
+    public void GetPropMesh(Mesh mesh)
+    {
+        scenePropMesh = mesh;
+    }
+
+    public void GetBoxCollider(BoxCollider bColl)
+    {
+        scenePropColliderB = bColl;
+    }
+
+    public void GetMeshCollider(MeshCollider mColl)
+    {
+        scenePropColliderM = mColl;
+    }
+
+    public void GetPropScale(Vector3 pickedPropScale)
+    {
+        scenePropScale = pickedPropScale;
+    }
+
+    private Vector3 CalculateScale(Vector3 propScale)
+    {
+        float missingPercent = 1 - scenePropScale.x;
+        
+        Vector3 scaleModifer = propScale * missingPercent;
+        propScale = propScale - scaleModifer;
+        
+        return propScale;
     }
 
     public bool ReturnAuthority()
@@ -59,7 +96,13 @@ public class PlayerInteractions : NetworkBehaviour
                     Debug.Log("PROP NULL!");
                     return;
                 }
-                Instantiate(sceneProp.GetComponent<Prop>().PropModel(), interactableArea.transform);
+                // fix prop scale when held here 
+                GameObject pickedProp = Instantiate(sceneProp.GetComponent<Prop>().PropModel(), interactableArea.transform.position, interactableArea.transform.rotation);
+                pickedProp.transform.SetParent(interactableArea.transform);
+                if (pickedProp.transform.localScale != new Vector3(1f, 1f, 1f))
+                {
+                    pickedProp.transform.localScale = CalculateScale(pickedProp.transform.localScale);
+                }
                 break;
             case EquippedProp.nothing:
                 if (interactableArea.transform.childCount > 0)
@@ -77,6 +120,13 @@ public class PlayerInteractions : NetworkBehaviour
             Interact();
         }
         
+        if(!propInTrigger || !hasProp)
+        {
+            scenePropMesh = null;
+            scenePropColliderM = null;
+            scenePropColliderB = null;
+        }
+
         if (Input.GetMouseButtonDown(1) && hasProp)
         {
             CmdThrow();
@@ -137,5 +187,9 @@ public class PlayerInteractions : NetworkBehaviour
             newSceneProp = null;
             throwCalled = false;
         }
+
+        scenePropMesh = null;
+        scenePropColliderM = null;
+        scenePropColliderB = null;
     }
 }

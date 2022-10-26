@@ -224,7 +224,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 215190107}
-  m_LocalRotation: {x: 0.010446115, y: 0.029754696, z: 0.0022781838, w: 0.99950004}
+  m_LocalRotation: {x: 0.010446119, y: 0.029754696, z: 0.0022781838, w: 0.99950004}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1238,6 +1238,9 @@ MonoBehaviour:
   interactableArea: {fileID: 3589919168068524502}
   hasProp: 0
   sceneProp: {fileID: 0}
+  scenePropMesh: {fileID: 0}
+  scenePropColliderB: {fileID: 0}
+  scenePropColliderM: {fileID: 0}
   scenePropPrefab: {fileID: 7943912144326623366, guid: 63f9dd6c31de6d14ba523bae99348bd6, type: 3}
   equippedProp: 0
 --- !u!1 &3589919168068524502

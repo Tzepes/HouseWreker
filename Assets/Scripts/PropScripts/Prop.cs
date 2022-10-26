@@ -16,6 +16,16 @@ public class Prop : NetworkBehaviour
     [SerializeField]
     private ScoreDisplay scoreDisplay;
 
+    private Mesh mesh;
+
+    void Start()
+    {
+        if (!rb)
+        {
+            rb = this.gameObject.GetComponent<Rigidbody>();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -51,6 +61,9 @@ public class Prop : NetworkBehaviour
 
     public GameObject PropModel()
     {
+        // apply original prop's mesh to picked up prop 
+        mesh = this.GetComponent<MeshFilter>().mesh;
+        propModel.GetComponent<MeshFilter>().mesh = mesh;
         return propModel;
     }
 

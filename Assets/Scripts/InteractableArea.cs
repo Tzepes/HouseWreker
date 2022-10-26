@@ -12,12 +12,22 @@ public class InteractableArea : MonoBehaviour
     {
         if (other.tag == "Prop")
         {
-            if(prop == null)
+            if(prop == null) 
             {
+                // make all of this more readable (use and declare variables)
                 prop = other.gameObject;
+                
                 player.GetComponent<PlayerInteractions>().GetProp(prop);
-                //player.GetComponent<PlayerInteractions>().GetPropMesh(); //get mesh
-                //get collider type
+                player.GetComponent<PlayerInteractions>().GetPropMesh(prop.GetComponent<MeshFilter>().mesh); //get mesh
+                //get collider type if(mesh colider) else if (box collider)
+                if (prop.GetComponent<MeshCollider>())
+                {
+                    player.GetComponent<PlayerInteractions>().GetMeshCollider(prop.GetComponent<MeshCollider>());
+                } else //if (prop.GetComponent<BoxCollider>())
+                {
+                    player.GetComponent<PlayerInteractions>().GetBoxCollider(prop.GetComponent<BoxCollider>());
+                }
+                player.GetComponent<PlayerInteractions>().GetPropScale(prop.transform.localScale);
                 if (player.GetComponent<PlayerInteractions>().ReturnAuthority())
                 {
                     other.GetComponent<PropOutline>().enableOutline();
